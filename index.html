@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<title>Mapa da ISS</title>
-	<link rel="stylesheet" href="leaflet.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
-	
-	<style>
 
+<head>
+    <meta charset="utf-8">
+    <title>Mapa da ISS</title>
+    <link rel="stylesheet" href="leaflet.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -17,41 +22,58 @@
         body {
             background-color: black;
             color: rgb(169, 212, 255);
+            font-family: "Trirong", sans-serif;
+            background-image: url('background-iss.jpg');
+            background-attachment: fixed;
+            /* Deixa o fundo fixo */
+            background-size: cover;
+            /* Faz a imagem cobrir toda a tela */
+            background-position: center;
+            /* Centraliza a imagem */
+        }
+
+        #iss-coord-container #logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
         }
 
         section {
+            vertical-align: middle;
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100vh;
             align-items: center;
             justify-content: center;
-            font-family: "Trirong", sans-serif;
-            background-image: url('background-iss.png');
+
+
             background-size: cover;
             background-position: center;
         }
 
-        h1{
-            font-size: 7vw;
+        h1 {
+            font-size: 30px;
         }
 
         #logo {
             width: 100%;
-            height: 200px;
+
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: -25px;
+            margin-top: 20px;
         }
-        
-		#map {
-            width: 100%;
-			height: 350px;
-            margin: auto;
-		}
 
-        
+        #map {
+            width: 100%;
+            height: 350px;
+            margin: auto;
+        }
+
+
         #iss-coord-container {
             display: flex;
             justify-content: center;
@@ -60,120 +82,157 @@
         }
 
         h2 {
-            font-size: 60px;
-            margin-bottom: -40px;
-            margin-top: -25px;
+            font-size: 20px;
         }
 
-		#iss-coordinates {
-			display: block;
-			font-weight: bold;
-            font-size: 50px;
-			height: 100px;
-			
+        #iss-coordinates {
+            font-size: 15px;
             z-index: 1000;
-		}
-	</style>
+            margin-bottom: 20px;
+        }
+
+        #explanation {
+            
+            font-family: "Roboto", sans-serif;
+            margin-top: 50px;
+            margin-bottom: 100px;
+            padding-left: 100px;
+            padding-right: 100px;
+        }
+
+        #explanation h1 {
+            border-bottom: solid 1px rgb(169, 212, 255);
+            margin-bottom: 20px;
+        }
+
+        #candiniz {
+            padding-top: 50px;
+            text-align: center;
+            margin: auto;
+        }
+    </style>
 </head>
+
 <body>
     <section>
-        <div id="logo">
+        <div class="divs" id="logo">
             <h1>ISS JavaScript Finder</h1>
         </div>
-            <div id="map"></div>
 
-            <div id="iss-coord-container">
-                <h2>Coordinates</h2>
-                <div id="iss-coordinates"></div>
-            </div>
+        <div id="map"></div>
+
+        <div class="divs" id="iss-coord-container">
+            <h2>Coordinates</h2>
+            <div id="iss-coordinates"></div>
         </div>
     </section>
+    <div id="explanation">
+        <h1>O que é o <strong>ISS Finder</strong></h1>
+        <p>
+            Este projeto foi criado como minha primeira aplicação usando JavaScript puro, com o objetivo de explorar a
+            integração de APIs e como fazer chamadas assíncronas em um contexto real. Utilizei o Leaflet, uma biblioteca
+            para mapas interativos, e a API da Open Notify para rastrear a Estação Espacial Internacional (ISS) em tempo
+            real.<br />
+            <br />
+            A funcionalidade do aplicativo é simples e interessante: ele exibe um mapa interativo que mostra a
+            localização atual da ISS, atualizando a posição a cada 5 segundos. Enquanto o usuário observa, o mapa também
+            exibe um rastro da movimentação da estação, permitindo ver a trajetória da ISS ao longo do tempo. Além
+            disso, há um círculo em torno do ícone da ISS, representando a área visível da estação a partir do ponto
+            onde ela se encontra. Esse círculo simula a distância real em que a ISS pode ser vista a olho nu ou com
+            equipamento adequado, dependendo das condições meteorológicas.<br />
+            <br />
+            O objetivo dessa aplicação foi estudar como interagir com APIs externas usando JavaScript e como criar uma
+            interface dinâmica sem o uso de frameworks, apenas com HTML, CSS e JS.
+        </p>
+        <p id="candiniz">Candiniz | 2022</p>
+    </div>
 
-	<script src="leaflet.js"></script>
-	<script>
-		var map = L.map('map').setView([0, 0], 2);
+    <script src="leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
 
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-		}).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-		var issIcon = L.icon({
-			iconUrl: 'iss.png',
-			iconSize: [50, 32],
-			iconAnchor: [27, 5],
-			popupAnchor: [0, -16]
-		});
+        var issIcon = L.icon({
+            iconUrl: 'iss.png',
+            iconSize: [50, 32],
+            iconAnchor: [27, 5],
+            popupAnchor: [0, -16]
+        });
 
-		var issMarker = L.marker([0, 0], {icon: issIcon}).addTo(map);
+        var issMarker = L.marker([0, 0], { icon: issIcon }).addTo(map);
 
 
-		var issCoordinates = document.getElementById('iss-coordinates');
-        
-        var issPath = L.polyline([], {color: 'red'}).addTo(map);
+        var issCoordinates = document.getElementById('iss-coordinates');
 
-		var circle = L.circle([0, 0], {
+        var issPath = L.polyline([], { color: 'red' }).addTo(map);
+
+        var circle = L.circle([0, 0], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.15,
             radius: 3000000 // valor em metros
         }).addTo(map);
 
-function updateISSLocation() {
-    fetch('http://api.open-notify.org/iss-now.json')
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            var lat = data.iss_position.latitude;
-            var lng = data.iss_position.longitude;
+        function updateISSLocation() {
+            fetch('http://api.open-notify.org/iss-now.json')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var lat = data.iss_position.latitude;
+                    var lng = data.iss_position.longitude;
 
-            issMarker.setLatLng([lat, lng]);
+                    issMarker.setLatLng([lat, lng]);
 
-            map.setView([lat, lng], map.getZoom());
+                    map.setView([lat, lng], map.getZoom());
 
-            issCoordinates.innerHTML = "Latitude: " + lat + ", Longitude: " + lng;
+                    issCoordinates.innerHTML = "Latitude: " + lat + ", Longitude: " + lng;
 
-            issPath.addLatLng([lat, lng]);
+                    issPath.addLatLng([lat, lng]);
 
-            if (issPath.getLatLngs().length === 1) {
-                issPath.addLatLng([lat, lng]);
-            }
+                    if (issPath.getLatLngs().length === 1) {
+                        issPath.addLatLng([lat, lng]);
+                    }
 
-            // atualizar a posição do círculo ao redor do ícone da ISS
-            circle.setLatLng([lat, lng]);
-        })
-        .catch(function(error) {
-            console.log('Erro ao obter a localização da ISS:', error);
-        });
-}
+                    // atualizar a posição do círculo ao redor do ícone da ISS
+                    circle.setLatLng([lat, lng]);
+                })
+                .catch(function (error) {
+                    console.log('Erro ao obter a localização da ISS:', error);
+                });
+        }
 
 
-		updateISSLocation();
-		setInterval(updateISSLocation, 5000);
+        updateISSLocation();
+        setInterval(updateISSLocation, 5000);
 
 
 
         var userIcon = L.icon({
-  iconUrl: 'user-marker.png',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  iconOptions: {
-    backgroundColor: null
-  }
-});
+            iconUrl: 'user-marker.png',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            iconOptions: {
+                backgroundColor: null
+            }
+        });
 
 
 
         if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(function(position) {
-    var userLat = position.coords.latitude;
-    var userLng = position.coords.longitude;
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var userLat = position.coords.latitude;
+                var userLng = position.coords.longitude;
 
-    // Adicionar marcador com ícone personalizado na posição do usuário
-    L.marker([userLat, userLng], {icon: userIcon}).addTo(map);
-  });
-}
+                // Adicionar marcador com ícone personalizado na posição do usuário
+                L.marker([userLat, userLng], { icon: userIcon }).addTo(map);
+            });
+        }
 
-	</script>
+    </script>
 </body>
+
 </html>
