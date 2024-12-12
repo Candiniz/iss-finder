@@ -151,89 +151,80 @@
     <script src="leaflet.js"></script>
     <script>
         var map = L.map('map').setView([0, 0], 2);
-
+    
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         }).addTo(map);
-
+    
         var issIcon = L.icon({
             iconUrl: 'iss.png',
             iconSize: [50, 32],
             iconAnchor: [27, 5],
             popupAnchor: [0, -16]
         });
-
+    
         var issMarker = L.marker([0, 0], { icon: issIcon }).addTo(map);
-
-
+    
         var issCoordinates = document.getElementById('iss-coordinates');
-
+    
         var issPath = L.polyline([], { color: 'red' }).addTo(map);
-
+    
         var circle = L.circle([0, 0], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.15,
             radius: 3000000 // valor em metros
         }).addTo(map);
-
+    
         function updateISSLocation() {
-            fetch('http://api.open-notify.org/iss-now.json')
+            fetch('https://api.wheretheiss.at/v1/satellites/25544')
                 .then(function (response) {
                     return response.json();
                 })
                 .then(function (data) {
-                    var lat = data.iss_position.latitude;
-                    var lng = data.iss_position.longitude;
-
+                    var lat = data.latitude;
+                    var lng = data.longitude;
+    
                     issMarker.setLatLng([lat, lng]);
-
+    
                     map.setView([lat, lng], map.getZoom());
-
-                    issCoordinates.innerHTML = "Latitude: " + lat + ", Longitude: " + lng;
-
+    
+                    issCoordinates.innerHTML = "Latitude: " + lat.toFixed(2) + ", Longitude: " + lng.toFixed(2);
+    
                     issPath.addLatLng([lat, lng]);
-
+    
                     if (issPath.getLatLngs().length === 1) {
                         issPath.addLatLng([lat, lng]);
                     }
-
-                    // atualizar a posição do círculo ao redor do ícone da ISS
+    
+                    // Atualizar a posição do círculo ao redor do ícone da ISS
                     circle.setLatLng([lat, lng]);
                 })
                 .catch(function (error) {
                     console.log('Erro ao obter a localização da ISS:', error);
                 });
         }
-
-
+    
         updateISSLocation();
         setInterval(updateISSLocation, 5000);
-
-
-
+    
         var userIcon = L.icon({
             iconUrl: 'user-marker.png',
             iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            iconOptions: {
-                backgroundColor: null
-            }
+            iconAnchor: [16, 32]
         });
-
-
-
+    
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var userLat = position.coords.latitude;
                 var userLng = position.coords.longitude;
-
+    
                 // Adicionar marcador com ícone personalizado na posição do usuário
                 L.marker([userLat, userLng], { icon: userIcon }).addTo(map);
             });
         }
-
     </script>
+    
 </body>
 
 </html>
